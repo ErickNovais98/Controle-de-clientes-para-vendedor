@@ -11,6 +11,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Veja quem você precisa atender hoje, retornos atrasados e clientes sem contato." },
       { property: "og:title", content: "Painel — Minha Carteira" },
       { property: "og:description", content: "O que precisa da sua atenção hoje na sua carteira de clientes." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Dashboard,

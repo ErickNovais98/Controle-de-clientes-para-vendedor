@@ -11,6 +11,8 @@ export const Route = createFileRoute("/lembretes")({
       { name: "description", content: "Retornos de hoje, próximos e atrasados em um só lugar." },
       { property: "og:title", content: "Lembretes — Minha Carteira" },
       { property: "og:description", content: "Não esqueça nenhum retorno para seus clientes." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Lembretes,

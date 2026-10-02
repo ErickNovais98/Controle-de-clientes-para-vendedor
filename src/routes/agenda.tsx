@@ -13,6 +13,8 @@ export const Route = createFileRoute("/agenda")({
       { name: "description", content: "Seus retornos e atividades por dia, semana ou mês." },
       { property: "og:title", content: "Agenda — Minha Carteira" },
       { property: "og:description", content: "Veja e organize seus próximos contatos com clientes." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Agenda,
