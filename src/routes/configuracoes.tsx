@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Download, Upload, RotateCcw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Card, PageHeader } from "@/components/crm/bits";
+import { Card, Empty, PageHeader } from "@/components/crm/bits";
 import { crm, todayISO, useCrm } from "@/lib/crm";
 
 export const Route = createFileRoute("/configuracoes")({
@@ -40,6 +40,8 @@ function Config() {
     a.click();
     URL.revokeObjectURL(a.href);
   };
+
+  if (!s.loaded) return <Empty text="Carregando configurações..." />;
 
   return (
     <>
