@@ -71,7 +71,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </aside>
 
-      <main className="mx-auto max-w-6xl px-4 pb-28 pt-6 md:px-8 md:pb-10 md:pt-10">
+      <main className="mx-auto min-w-0 max-w-6xl px-4 pb-28 pt-6 md:px-8 md:pb-10 md:pt-10">
         <div className="relative mb-5 md:hidden">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <input className="field pl-9" aria-label="Buscar cliente" placeholder="Buscar cliente..." value={search} onChange={(e) => setSearch(e.target.value)} />

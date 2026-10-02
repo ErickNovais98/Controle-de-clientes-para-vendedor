@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Users, UserCheck, Handshake, UserX, CalendarCheck, AlertTriangle, Clock, ArrowRight, Phone, MessageCircle } from "lucide-react";
 import { Card, Empty, FollowUpRow, PageHeader, Avatar, StatusBadge, IconBtn } from "@/components/crm/bits";
-import { daysBetween, followVisual, fmtRelative, sortFollow, staleCustomers, todayISO, useCrm } from "@/lib/crm";
+import { daysBetween, followVisual, fmtDate, fmtRelative, sortFollow, staleCustomers, todayISO, useCrm } from "@/lib/crm";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
@@ -45,6 +45,12 @@ function Dashboard() {
     <>
       <PageHeader title={`${greet}${name}!`} subtitle="Olá! Aqui está o que precisa da sua atenção hoje." />
 
+      {s.loaded && <div className="mb-5 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground" aria-live="polite">
+        <span>Você tem <b className="text-foreground">{today.length}</b> {today.length === 1 ? "contato programado" : "contatos programados"} para hoje.</span>
+        {overdue.length > 0 && <span className="text-danger">Você possui {overdue.length} {overdue.length === 1 ? "retorno atrasado" : "retornos atrasados"}.</span>}
+        {upcoming[0] && <span>Próximo contato: {fmtDate(upcoming[0].date)} às {upcoming[0].time}.</span>}
+      </div>}
+
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
         {stats.map(({ label, value, icon: I, tone, to }) => (
           <Link key={label} to={to}>
@@ -59,8 +65,8 @@ function Dashboard() {
         ))}
       </div>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-5">
-        <section className="lg:col-span-3">
+      <div className="mt-8 grid min-w-0 gap-6 lg:grid-cols-5">
+        <section className="min-w-0 lg:col-span-3">
           <h2 className="mb-3 flex items-center gap-2 text-lg font-bold">
             Precisam de atenção
             {attention.length > 0 && <span className="rounded-full bg-danger-soft px-2 py-0.5 text-xs text-danger">{attention.length}</span>}
@@ -83,7 +89,7 @@ function Dashboard() {
           </div>
         </section>
 
-        <section className="lg:col-span-2">
+        <section className="min-w-0 lg:col-span-2">
           <h2 className="mb-3 text-lg font-bold">Clientes sem contato recente</h2>
           <Card className="divide-y">
             <div className="px-4 py-3 text-xs text-muted-foreground">
@@ -101,7 +107,7 @@ function Dashboard() {
                       <div className="min-w-0 flex-1">
                         <div className="truncate text-sm font-semibold">{c.name}</div>
                         <div className="truncate text-xs text-muted-foreground">
-                          {c.lastContact ? `${daysBetween(c.lastContact, t)} dias sem contato` : "Nunca contatado"} · {c.company}
+                          {c.lastContact ? `Este cliente está há ${daysBetween(c.lastContact, t)} dias sem atendimento` : "Este cliente ainda não recebeu atendimento"} · {c.company}
                         </div>
                       </div>
                     </Link>
@@ -111,7 +117,7 @@ function Dashboard() {
                         const number = (c.whatsapp || c.phone).replace(/\D/g, "");
                         window.open(`https://wa.me/${number.startsWith("55") ? number : `55${number}`}`, "_blank", "noopener,noreferrer");
                       }}><MessageCircle className="size-4" /></IconBtn>}
-                      <StatusBadge status={c.status} />
+                      <span className="hidden sm:inline-flex"><StatusBadge status={c.status} /></span>
                     </div>
                   </div>
                 ))
