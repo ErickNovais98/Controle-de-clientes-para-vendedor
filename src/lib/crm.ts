@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
 export type CustomerStatus = "ativo" | "negociacao" | "inativo";
 export type InteractionType = "ligacao" | "whatsapp" | "visita" | "email" | "reuniao" | "outro";
@@ -182,14 +182,16 @@ function load() {
 
 function subscribe(l: () => void) {
   listeners.add(l);
-  if (!state.loaded) {
-    load();
-    queueMicrotask(emit);
-  }
   return () => listeners.delete(l);
 }
 
 export function useCrm(): CrmState {
+  useEffect(() => {
+    if (!state.loaded) {
+      load();
+      emit();
+    }
+  }, []);
   return useSyncExternalStore(
     subscribe,
     () => state,
