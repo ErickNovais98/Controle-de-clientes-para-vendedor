@@ -264,7 +264,7 @@ export const crm = {
   },
   addInteraction(
     data: Omit<Interaction, "id" | "createdAt">,
-    opts: { nextTime?: string; nextTitle?: string; reminder?: boolean; completeFollowUpId?: string },
+    opts: { nextTime?: string; nextTitle?: string; reminder?: boolean; completeFollowUpId?: string | undefined },
   ) {
     set((s) => {
       const interaction: Interaction = { ...data, id: uid(), createdAt: stamp() };
@@ -296,7 +296,7 @@ export const crm = {
       return { ...s, customers, followUps, interactions: [interaction, ...s.interactions] };
     });
   },
-  saveFollowUp(input: Omit<FollowUp, "id" | "createdAt" | "updatedAt" | "status"> & { id?: string; status?: FollowUpStatus }) {
+  saveFollowUp(input: Omit<FollowUp, "id" | "createdAt" | "updatedAt" | "status"> & { id?: string | undefined; status?: FollowUpStatus }) {
     set((s) => {
       if (input.id && s.followUps.some((f) => f.id === input.id)) {
         return {
