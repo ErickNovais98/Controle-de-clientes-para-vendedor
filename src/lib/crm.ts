@@ -51,6 +51,8 @@ export interface FollowUp {
 export interface Settings {
   sellerName: string;
   staleDays: number;
+  tags: string[];
+  notifications: { today: boolean; overdue: boolean; upcoming: boolean; stale: boolean };
 }
 
 export interface CrmState {
@@ -141,7 +143,7 @@ const EMPTY: CrmState = {
   customers: [],
   interactions: [],
   followUps: [],
-  settings: { sellerName: "", staleDays: 30 },
+  settings: { sellerName: "", staleDays: 30, tags: ["Cliente importante", "Novo cliente", "Potencial", "Visita frequente", "Prioridade"], notifications: { today: true, overdue: true, upcoming: true, stale: true } },
 };
 
 let state: CrmState = EMPTY;
@@ -170,7 +172,7 @@ function load() {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const data = JSON.parse(raw);
-      state = { ...EMPTY, ...data, settings: { ...EMPTY.settings, ...data.settings }, loaded: true };
+      state = { ...EMPTY, ...data, settings: { ...EMPTY.settings, ...data.settings, notifications: { ...EMPTY.settings.notifications, ...data.settings?.notifications } }, loaded: true };
     } else {
       state = { ...seed(), loaded: true };
       persist();
@@ -333,7 +335,7 @@ export const crm = {
   importData(json: string) {
     const data = JSON.parse(json);
     if (!Array.isArray(data.customers)) throw new Error("invalid");
-    set(() => ({ ...EMPTY, ...data, settings: { ...EMPTY.settings, ...data.settings }, loaded: true }));
+    set(() => ({ ...EMPTY, ...data, settings: { ...EMPTY.settings, ...data.settings, notifications: { ...EMPTY.settings.notifications, ...data.settings?.notifications } }, loaded: true }));
   },
   resetDemo() {
     set(() => ({ ...seed(), loaded: true }));
@@ -445,5 +447,5 @@ function seed(): Omit<CrmState, "loaded"> {
     i(4, 55, "whatsapp", "Agradeceu a última entrega."),
     i(6, 1, "ligacao", "Confirmou pedido mensal.", "08:45"),
   ];
-  return { customers: c, interactions, followUps, settings: { sellerName: "", staleDays: 30 } };
+  return { customers: c, interactions, followUps, settings: EMPTY.settings };
 }

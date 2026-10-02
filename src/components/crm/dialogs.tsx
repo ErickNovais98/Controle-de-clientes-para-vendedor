@@ -143,7 +143,12 @@ function CustomerForm({ customerId, onDone }: { customerId?: string | undefined;
           </>
         )}
         <Field label="Etiquetas (separadas por vírgula)" full>
-          <input className="field" value={f.tags} onChange={up("tags")} placeholder="VIP, Orçamento" />
+          <input className="field" value={f.tags} onChange={up("tags")} placeholder="Ex.: Prioridade, Produto X" />
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {s.settings.tags.filter((tag) => !f.tags.split(",").map((x) => x.trim().toLocaleLowerCase("pt-BR")).includes(tag.toLocaleLowerCase("pt-BR"))).map((tag) => (
+              <Button key={tag} type="button" variant="outline" size="sm" onClick={() => setF({ ...f, tags: f.tags.trim() ? `${f.tags.trim().replace(/,$/, "")}, ${tag}` : tag })}>{tag}</Button>
+            ))}
+          </div>
         </Field>
         <Field label="Observações" full>
           <textarea className="field h-24 py-2" value={f.notes} onChange={up("notes")} />

@@ -46,9 +46,9 @@ function Dashboard() {
       <PageHeader title={`${greet}${name}!`} subtitle="Olá! Aqui está o que precisa da sua atenção hoje." />
 
       {s.loaded && <div className="mb-5 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground" aria-live="polite">
-        <span>Você tem <b className="text-foreground">{today.length}</b> {today.length === 1 ? "contato programado" : "contatos programados"} para hoje.</span>
-        {overdue.length > 0 && <span className="text-danger">Você possui {overdue.length} {overdue.length === 1 ? "retorno atrasado" : "retornos atrasados"}.</span>}
-        {upcoming[0] && <span>Próximo contato: {fmtDate(upcoming[0].date)} às {upcoming[0].time}.</span>}
+        {s.settings.notifications.today && <span>Você tem <b className="text-foreground">{today.length}</b> {today.length === 1 ? "contato programado" : "contatos programados"} para hoje.</span>}
+        {s.settings.notifications.overdue && overdue.length > 0 && <span className="text-danger">Você possui {overdue.length} {overdue.length === 1 ? "retorno atrasado" : "retornos atrasados"}.</span>}
+        {s.settings.notifications.upcoming && upcoming[0] && <span>Próximo contato: {fmtDate(upcoming[0].date)} às {upcoming[0].time}.</span>}
       </div>}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
@@ -107,7 +107,7 @@ function Dashboard() {
                       <div className="min-w-0 flex-1">
                         <div className="truncate text-sm font-semibold">{c.name}</div>
                         <div className="truncate text-xs text-muted-foreground">
-                          {c.lastContact ? `Este cliente está há ${daysBetween(c.lastContact, t)} dias sem atendimento` : "Este cliente ainda não recebeu atendimento"} · {c.company}
+                          {s.settings.notifications.stale ? (c.lastContact ? `Este cliente está há ${daysBetween(c.lastContact, t)} dias sem atendimento` : "Este cliente ainda não recebeu atendimento") : (c.lastContact ? `${daysBetween(c.lastContact, t)} dias sem contato` : "Nunca contatado")} · {c.company}
                         </div>
                       </div>
                     </Link>
