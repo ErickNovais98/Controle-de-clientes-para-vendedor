@@ -137,7 +137,7 @@ export function completeFollowUp(f: FollowUp) {
   });
 }
 
-export function FollowUpRow({ f, customer, compact }: { f: FollowUp; customer?: Customer; compact?: boolean }) {
+export function FollowUpRow({ f, customer, compact }: { f: FollowUp; customer?: Customer | undefined; compact?: boolean }) {
   const v = followVisual(f);
   const pending = f.status === "pendente";
   return (

@@ -17,7 +17,7 @@ export interface Customer {
   segment: string;
   status: CustomerStatus;
   firstContact: string;
-  lastContact?: string;
+  lastContact?: string | undefined;
   notes: string;
   tags: string[];
   createdAt: string;
@@ -31,7 +31,7 @@ export interface Interaction {
   date: string;
   time: string;
   description: string;
-  nextFollowUp?: string;
+  nextFollowUp?: string | undefined;
   createdAt: string;
 }
 
@@ -95,7 +95,7 @@ export const nowTime = () => {
 };
 export const parseISO = (s: string) => {
   const [y, m, d] = s.split("-").map(Number);
-  return new Date(y, m - 1, d);
+  return new Date(y ?? 1970, (m ?? 1) - 1, d ?? 1);
 };
 export const addDays = (s: string, n: number) => {
   const d = parseISO(s);
@@ -215,7 +215,7 @@ export function staleCustomers(s: CrmState) {
 
 /* ---------- ações ---------- */
 export type CustomerInput = Omit<Customer, "id" | "createdAt" | "updatedAt" | "lastContact"> & {
-  id?: string;
+  id?: string | undefined;
 };
 
 export const crm = {
@@ -385,7 +385,7 @@ function seed(): Omit<CrmState, "loaded"> {
     company,
     phone,
     whatsapp: phone,
-    email: `${name.split(" ")[0].toLowerCase()}@${company.split(" ")[0].toLowerCase()}.com.br`,
+    email: `${(name.split(" ")[0] ?? "cliente").toLowerCase()}@${(company.split(" ")[0] ?? "empresa").toLowerCase()}.com.br`,
     city,
     state,
     segment,
@@ -408,7 +408,7 @@ function seed(): Omit<CrmState, "loaded"> {
   ];
   const f = (ci: number, d: number, time: string, title: string, description = ""): FollowUp => ({
     id: uid(),
-    customerId: c[ci].id,
+    customerId: c[ci]?.id ?? "",
     date: addDays(t, d),
     time,
     title,
@@ -427,7 +427,7 @@ function seed(): Omit<CrmState, "loaded"> {
   ];
   const i = (ci: number, d: number, type: InteractionType, description: string, time = "10:00"): Interaction => ({
     id: uid(),
-    customerId: c[ci].id,
+    customerId: c[ci]?.id ?? "",
     type,
     date: addDays(t, -d),
     time,
