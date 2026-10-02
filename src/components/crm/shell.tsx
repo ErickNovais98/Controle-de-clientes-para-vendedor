@@ -62,10 +62,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           ))}
         </nav>
         <div className="mt-auto flex flex-col gap-2">
-          <Button onClick={() => openDialog({ kind: "interaction" })}>
+          <Button disabled={!s.loaded} onClick={() => openDialog({ kind: "interaction" })}>
             <ClipboardPen /> Registrar atendimento
           </Button>
-          <Button variant="outline" onClick={() => openDialog({ kind: "customer" })}>
+          <Button variant="outline" disabled={!s.loaded} onClick={() => openDialog({ kind: "customer" })}>
             <Plus /> Novo Cliente
           </Button>
         </div>
@@ -84,6 +84,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <button
         onClick={() => openDialog({ kind: "interaction" })}
+        disabled={!s.loaded}
         aria-label="Registrar atendimento"
         className="fixed bottom-20 right-4 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-card md:hidden"
       >

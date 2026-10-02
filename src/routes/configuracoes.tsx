@@ -74,6 +74,7 @@ function Config() {
           </div>
           <Button
             className="mt-4"
+            disabled={!s.loaded}
             onClick={() => {
               crm.updateSettings({ sellerName: name.trim(), staleDays: Math.max(1, days || 30), tags: [...new Set(tags.split(",").map((t) => t.trim()).filter(Boolean))], notifications });
               toast.success("Configurações salvas.");
@@ -89,8 +90,8 @@ function Config() {
             Seus dados ficam salvos neste navegador e funcionam sem internet. Exporte com frequência para não perder nada.
           </p>
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" onClick={exportFile}><Download /> Exportar dados</Button>
-            <Button variant="outline" onClick={() => file.current?.click()}><Upload /> Importar dados</Button>
+            <Button variant="outline" disabled={!s.loaded} onClick={exportFile}><Download /> Exportar dados</Button>
+            <Button variant="outline" disabled={!s.loaded} onClick={() => file.current?.click()}><Upload /> Importar dados</Button>
             <input
               ref={file}
               type="file"
@@ -114,12 +115,13 @@ function Config() {
         <Card className="p-5">
           <h2 className="mb-4 font-bold">Dados</h2>
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" onClick={() => { crm.resetDemo(); toast.success("Dados de exemplo restaurados."); }}>
+            <Button variant="outline" disabled={!s.loaded} onClick={() => { crm.resetDemo(); toast.success("Dados de exemplo restaurados."); }}>
               <RotateCcw /> Restaurar exemplos
             </Button>
             <Button
               variant="outline"
               className="text-danger hover:bg-danger-soft hover:text-danger"
+              disabled={!s.loaded}
               onClick={() => {
                 if (confirm("Apagar todos os clientes, atendimentos e agendamentos?")) {
                   crm.clearAll();
