@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Users, UserCheck, Handshake, UserX, CalendarCheck, AlertTriangle, Clock, ArrowRight } from "lucide-react";
-import { Card, Empty, FollowUpRow, PageHeader, Avatar, StatusBadge } from "@/components/crm/bits";
+import { Users, UserCheck, Handshake, UserX, CalendarCheck, AlertTriangle, Clock, ArrowRight, Phone, MessageCircle } from "lucide-react";
+import { Card, Empty, FollowUpRow, PageHeader, Avatar, StatusBadge, IconBtn } from "@/components/crm/bits";
 import { daysBetween, followVisual, fmtRelative, sortFollow, staleCustomers, todayISO, useCrm } from "@/lib/crm";
 import { cn } from "@/lib/utils";
 
@@ -103,7 +103,14 @@ function Dashboard() {
                         {c.lastContact ? `${daysBetween(c.lastContact, t)} dias sem contato` : "Nunca contatado"} · {c.company}
                       </div>
                     </div>
-                    <StatusBadge status={c.status} />
+                    <div className="flex shrink-0 items-center gap-1">
+                      {c.phone && <IconBtn title={`Ligar para ${c.name}`} onClick={() => { window.location.href = `tel:${c.phone.replace(/\D/g, "")}`; }}><Phone className="size-4" /></IconBtn>}
+                      {(c.whatsapp || c.phone) && <IconBtn title={`WhatsApp de ${c.name}`} onClick={() => {
+                        const number = (c.whatsapp || c.phone).replace(/\D/g, "");
+                        window.open(`https://wa.me/${number.startsWith("55") ? number : `55${number}`}`, "_blank", "noopener,noreferrer");
+                      }}><MessageCircle className="size-4" /></IconBtn>}
+                      <StatusBadge status={c.status} />
+                    </div>
                   </Link>
                 ))
             )}
@@ -127,6 +134,7 @@ function Dashboard() {
               Ver carteira <ArrowRight className="size-4" />
             </Link>
           </Card>
+          <Link to="/resumo" className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary">Resumo da Carteira <ArrowRight className="size-4" /></Link>
         </section>
       </div>
     </>
