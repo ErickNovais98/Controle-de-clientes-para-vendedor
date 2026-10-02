@@ -46,7 +46,7 @@ function Dashboard() {
       <PageHeader title={`${greet}${name}!`} subtitle="Olá! Aqui está o que precisa da sua atenção hoje." />
 
       {s.loaded && <div className="mb-5 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground" aria-live="polite">
-        {s.settings.notifications.today && <span>Você tem <b className="text-foreground">{today.length}</b> {today.length === 1 ? "contato programado" : "contatos programados"} para hoje.</span>}
+        {s.settings.notifications.today && <span>Você tem <b className="text-foreground">{today.length}</b>{" "}{today.length === 1 ? "contato programado" : "contatos programados"} para hoje.</span>}
         {s.settings.notifications.overdue && overdue.length > 0 && <span className="text-danger">Você possui {overdue.length} {overdue.length === 1 ? "retorno atrasado" : "retornos atrasados"}.</span>}
         {s.settings.notifications.upcoming && upcoming[0] && <span>Próximo contato: {fmtDate(upcoming[0].date)} às {upcoming[0].time}.</span>}
       </div>}
