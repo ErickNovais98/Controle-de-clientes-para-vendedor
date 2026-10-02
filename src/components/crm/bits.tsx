@@ -137,20 +137,20 @@ export function completeFollowUp(f: FollowUp) {
   });
 }
 
-export function FollowUpRow({ f, customer, compact }: { f: FollowUp; customer?: Customer; compact?: boolean }) {
+export function FollowUpRow({ f, customer, compact }: { f: FollowUp; customer?: Customer | undefined; compact?: boolean }) {
   const v = followVisual(f);
   const pending = f.status === "pendente";
   return (
-    <div className="flex flex-col gap-3 rounded-xl border bg-card p-4 transition-colors hover:border-primary/40 sm:flex-row sm:items-center">
+    <div className="flex min-w-0 flex-col gap-3 rounded-xl border bg-card p-4 transition-colors hover:border-primary/40 sm:flex-row sm:items-center">
       <div className="flex min-w-0 flex-1 items-start gap-3">
         <div className="w-16 shrink-0 text-center">
           <div className="text-sm font-bold">{f.time}</div>
           <div className="text-xs text-muted-foreground">{fmtDate(f.date).slice(0, 5)}</div>
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
             {customer ? (
-              <Link to="/clientes/$id" params={{ id: customer.id }} className="truncate font-semibold hover:text-primary">
+              <Link to="/clientes/$id" params={{ id: customer.id }} className="min-w-0 max-w-full truncate font-semibold hover:text-primary">
                 {customer.name}
               </Link>
             ) : (

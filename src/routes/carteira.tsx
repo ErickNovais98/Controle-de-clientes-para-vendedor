@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Search, Plus, ChevronRight, Phone, MapPin } from "lucide-react";
+import { Search, Plus, ChevronRight, Phone, MapPin, MessageCircle, ClipboardPen, CalendarPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, Card, Empty, PageHeader, StatusBadge } from "@/components/crm/bits";
+import { Avatar, Card, Empty, PageHeader, StatusBadge, IconBtn } from "@/components/crm/bits";
 import { fmtDate, fmtRelative, nextContactOf, openDialog, useCrm, type CustomerStatus } from "@/lib/crm";
 import { cn } from "@/lib/utils";
 
@@ -38,7 +38,7 @@ function Carteira() {
       .filter((c) => filter === "todos" || c.status === filter)
       .filter((c) =>
         !term ||
-        [c.name, c.company, c.phone, c.city, c.segment, c.email, ...c.tags].some((v) => v?.toLowerCase().includes(term)),
+        [c.name, c.company, c.phone, c.whatsapp, c.city, c.segment, c.email, ...c.tags].some((v) => v?.toLowerCase().includes(term)),
       )
       .map((c) => ({ c, next: nextContactOf(s, c.id) }));
     const order: Record<CustomerStatus, number> = { negociacao: 0, ativo: 1, inativo: 2 };
@@ -127,9 +127,16 @@ function Carteira() {
                       ) : "—"}
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <Link to="/clientes/$id" params={{ id: c.id }} className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                        Abrir <ChevronRight className="size-4" />
-                      </Link>
+                      <div className="flex justify-end gap-1">
+                        {c.phone && <IconBtn title="Ligar" onClick={() => { window.location.href = `tel:${c.phone.replace(/\D/g, "")}`; }}><Phone className="size-4" /></IconBtn>}
+                        {(c.whatsapp || c.phone) && <IconBtn title="WhatsApp" onClick={() => {
+                          const n = (c.whatsapp || c.phone).replace(/\D/g, "");
+                          window.open(`https://wa.me/${n.startsWith("55") ? n : `55${n}`}`, "_blank", "noopener,noreferrer");
+                        }}><MessageCircle className="size-4" /></IconBtn>}
+                        <IconBtn title="Registrar atendimento" onClick={() => openDialog({ kind: "interaction", customerId: c.id })}><ClipboardPen className="size-4" /></IconBtn>
+                        <IconBtn title="Agendar contato" onClick={() => openDialog({ kind: "followup", customerId: c.id })}><CalendarPlus className="size-4" /></IconBtn>
+                        <Link to="/clientes/$id" params={{ id: c.id }} title="Abrir cliente" aria-label="Abrir cliente" className="inline-flex size-9 items-center justify-center rounded-lg border text-primary hover:bg-accent"><ChevronRight className="size-4" /></Link>
+                      </div>
                     </td>
                   </tr>
                 ))}

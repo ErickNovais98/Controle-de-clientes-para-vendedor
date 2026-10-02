@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -44,7 +44,7 @@ export function CrmDialogs() {
   );
 }
 
-function CustomerForm({ customerId, onDone }: { customerId?: string; onDone: () => void }) {
+function CustomerForm({ customerId, onDone }: { customerId?: string | undefined; onDone: () => void }) {
   const s = useCrm();
   const navigate = useNavigate();
   const existing = s.customers.find((c) => c.id === customerId);
@@ -68,7 +68,7 @@ function CustomerForm({ customerId, onDone }: { customerId?: string; onDone: () 
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!f.name.trim()) return toast.error("Informe o nome do cliente.");
+    if (!f.name.trim()) { toast.error("Informe o nome do cliente."); return; }
     const id = crm.saveCustomer(
       {
         id: existing?.id,
@@ -143,7 +143,12 @@ function CustomerForm({ customerId, onDone }: { customerId?: string; onDone: () 
           </>
         )}
         <Field label="Etiquetas (separadas por vírgula)" full>
-          <input className="field" value={f.tags} onChange={up("tags")} placeholder="VIP, Orçamento" />
+          <input className="field" value={f.tags} onChange={up("tags")} placeholder="Ex.: Prioridade, Produto X" />
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {s.settings.tags.filter((tag) => !f.tags.split(",").map((x) => x.trim().toLocaleLowerCase("pt-BR")).includes(tag.toLocaleLowerCase("pt-BR"))).map((tag) => (
+              <Button key={tag} type="button" variant="outline" size="sm" onClick={() => setF({ ...f, tags: f.tags.trim() ? `${f.tags.trim().replace(/,$/, "")}, ${tag}` : tag })}>{tag}</Button>
+            ))}
+          </div>
         </Field>
         <Field label="Observações" full>
           <textarea className="field h-24 py-2" value={f.notes} onChange={up("notes")} />
@@ -157,7 +162,7 @@ function CustomerForm({ customerId, onDone }: { customerId?: string; onDone: () 
   );
 }
 
-function InteractionForm({ customerId, followUpId, onDone }: { customerId?: string; followUpId?: string; onDone: () => void }) {
+function InteractionForm({ customerId, followUpId, onDone }: { customerId?: string | undefined; followUpId?: string | undefined; onDone: () => void }) {
   const s = useCrm();
   const [f, setF] = useState({
     customerId: customerId ?? "",
@@ -175,8 +180,8 @@ function InteractionForm({ customerId, followUpId, onDone }: { customerId?: stri
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!f.customerId) return toast.error("Selecione o cliente.");
-    if (!f.description.trim()) return toast.error("Descreva o atendimento.");
+    if (!f.customerId) { toast.error("Selecione o cliente."); return; }
+    if (!f.description.trim()) { toast.error("Descreva o atendimento."); return; }
     crm.addInteraction(
       {
         customerId: f.customerId,
@@ -257,7 +262,7 @@ function InteractionForm({ customerId, followUpId, onDone }: { customerId?: stri
   );
 }
 
-function FollowUpForm({ customerId, followUpId, onDone }: { customerId?: string; followUpId?: string; onDone: () => void }) {
+function FollowUpForm({ customerId, followUpId, onDone }: { customerId?: string | undefined; followUpId?: string | undefined; onDone: () => void }) {
   const s = useCrm();
   const existing = s.followUps.find((x) => x.id === followUpId);
   const [f, setF] = useState({
@@ -268,13 +273,12 @@ function FollowUpForm({ customerId, followUpId, onDone }: { customerId?: string;
     description: existing?.description ?? "",
     reminder: existing?.reminder ?? true,
   });
-  useEffect(() => {}, []);
   const up = (k: keyof typeof f) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
   const customers = [...s.customers].sort((a, b) => a.name.localeCompare(b.name));
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!f.customerId) return toast.error("Selecione o cliente.");
+    if (!f.customerId) { toast.error("Selecione o cliente."); return; }
     crm.saveFollowUp({ ...f, id: existing?.id });
     toast.success(existing ? "Contato reagendado." : "Próximo contato agendado.");
     onDone();

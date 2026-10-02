@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
 export type CustomerStatus = "ativo" | "negociacao" | "inativo";
 export type InteractionType = "ligacao" | "whatsapp" | "visita" | "email" | "reuniao" | "outro";
@@ -17,7 +17,7 @@ export interface Customer {
   segment: string;
   status: CustomerStatus;
   firstContact: string;
-  lastContact?: string;
+  lastContact?: string | undefined;
   notes: string;
   tags: string[];
   createdAt: string;
@@ -31,7 +31,7 @@ export interface Interaction {
   date: string;
   time: string;
   description: string;
-  nextFollowUp?: string;
+  nextFollowUp?: string | undefined;
   createdAt: string;
 }
 
@@ -51,6 +51,8 @@ export interface FollowUp {
 export interface Settings {
   sellerName: string;
   staleDays: number;
+  tags: string[];
+  notifications: { today: boolean; overdue: boolean; upcoming: boolean; stale: boolean };
 }
 
 export interface CrmState {
@@ -95,7 +97,7 @@ export const nowTime = () => {
 };
 export const parseISO = (s: string) => {
   const [y, m, d] = s.split("-").map(Number);
-  return new Date(y, m - 1, d);
+  return new Date(y ?? 1970, (m ?? 1) - 1, d ?? 1);
 };
 export const addDays = (s: string, n: number) => {
   const d = parseISO(s);
@@ -141,7 +143,7 @@ const EMPTY: CrmState = {
   customers: [],
   interactions: [],
   followUps: [],
-  settings: { sellerName: "", staleDays: 30 },
+  settings: { sellerName: "", staleDays: 30, tags: ["Cliente importante", "Novo cliente", "Potencial", "Visita frequente", "Prioridade"], notifications: { today: true, overdue: true, upcoming: true, stale: true } },
 };
 
 let state: CrmState = EMPTY;
@@ -170,7 +172,7 @@ function load() {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const data = JSON.parse(raw);
-      state = { ...EMPTY, ...data, settings: { ...EMPTY.settings, ...data.settings }, loaded: true };
+      state = { ...EMPTY, ...data, settings: { ...EMPTY.settings, ...data.settings, notifications: { ...EMPTY.settings.notifications, ...data.settings?.notifications } }, loaded: true };
     } else {
       state = { ...seed(), loaded: true };
       persist();
@@ -182,14 +184,16 @@ function load() {
 
 function subscribe(l: () => void) {
   listeners.add(l);
-  if (!state.loaded) {
-    load();
-    queueMicrotask(emit);
-  }
   return () => listeners.delete(l);
 }
 
 export function useCrm(): CrmState {
+  useEffect(() => {
+    if (!state.loaded) {
+      load();
+      emit();
+    }
+  }, []);
   return useSyncExternalStore(
     subscribe,
     () => state,
@@ -215,7 +219,7 @@ export function staleCustomers(s: CrmState) {
 
 /* ---------- ações ---------- */
 export type CustomerInput = Omit<Customer, "id" | "createdAt" | "updatedAt" | "lastContact"> & {
-  id?: string;
+  id?: string | undefined;
 };
 
 export const crm = {
@@ -264,7 +268,7 @@ export const crm = {
   },
   addInteraction(
     data: Omit<Interaction, "id" | "createdAt">,
-    opts: { nextTime?: string; nextTitle?: string; reminder?: boolean; completeFollowUpId?: string },
+    opts: { nextTime?: string; nextTitle?: string; reminder?: boolean; completeFollowUpId?: string | undefined },
   ) {
     set((s) => {
       const interaction: Interaction = { ...data, id: uid(), createdAt: stamp() };
@@ -296,7 +300,7 @@ export const crm = {
       return { ...s, customers, followUps, interactions: [interaction, ...s.interactions] };
     });
   },
-  saveFollowUp(input: Omit<FollowUp, "id" | "createdAt" | "updatedAt" | "status"> & { id?: string; status?: FollowUpStatus }) {
+  saveFollowUp(input: Omit<FollowUp, "id" | "createdAt" | "updatedAt" | "status"> & { id?: string | undefined; status?: FollowUpStatus }) {
     set((s) => {
       if (input.id && s.followUps.some((f) => f.id === input.id)) {
         return {
@@ -331,7 +335,7 @@ export const crm = {
   importData(json: string) {
     const data = JSON.parse(json);
     if (!Array.isArray(data.customers)) throw new Error("invalid");
-    set(() => ({ ...EMPTY, ...data, settings: { ...EMPTY.settings, ...data.settings }, loaded: true }));
+    set(() => ({ ...EMPTY, ...data, settings: { ...EMPTY.settings, ...data.settings, notifications: { ...EMPTY.settings.notifications, ...data.settings?.notifications } }, loaded: true }));
   },
   resetDemo() {
     set(() => ({ ...seed(), loaded: true }));
@@ -385,7 +389,7 @@ function seed(): Omit<CrmState, "loaded"> {
     company,
     phone,
     whatsapp: phone,
-    email: `${name.split(" ")[0].toLowerCase()}@${company.split(" ")[0].toLowerCase()}.com.br`,
+    email: `${(name.split(" ")[0] ?? "cliente").toLowerCase()}@${(company.split(" ")[0] ?? "empresa").toLowerCase()}.com.br`,
     city,
     state,
     segment,
@@ -408,7 +412,7 @@ function seed(): Omit<CrmState, "loaded"> {
   ];
   const f = (ci: number, d: number, time: string, title: string, description = ""): FollowUp => ({
     id: uid(),
-    customerId: c[ci].id,
+    customerId: c[ci]?.id ?? "",
     date: addDays(t, d),
     time,
     title,
@@ -427,7 +431,7 @@ function seed(): Omit<CrmState, "loaded"> {
   ];
   const i = (ci: number, d: number, type: InteractionType, description: string, time = "10:00"): Interaction => ({
     id: uid(),
-    customerId: c[ci].id,
+    customerId: c[ci]?.id ?? "",
     type,
     date: addDays(t, -d),
     time,
@@ -443,5 +447,5 @@ function seed(): Omit<CrmState, "loaded"> {
     i(4, 55, "whatsapp", "Agradeceu a última entrega."),
     i(6, 1, "ligacao", "Confirmou pedido mensal.", "08:45"),
   ];
-  return { customers: c, interactions, followUps, settings: { sellerName: "", staleDays: 30 } };
+  return { customers: c, interactions, followUps, settings: EMPTY.settings };
 }

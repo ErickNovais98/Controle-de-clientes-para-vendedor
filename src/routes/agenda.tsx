@@ -48,7 +48,7 @@ function Agenda() {
       ? `${MONTHS[d.getMonth()]} ${d.getFullYear()}`
       : view === "semana"
         ? `Semana de ${parseISO(weekStart).getDate()}/${parseISO(weekStart).getMonth() + 1}`
-        : `${WEEK[d.getDay()]}, ${d.getDate()} de ${MONTHS[d.getMonth()].toLowerCase()}`;
+        : `${WEEK[d.getDay()]}, ${d.getDate()} de ${(MONTHS[d.getMonth()] ?? "").toLowerCase()}`;
 
   return (
     <>
