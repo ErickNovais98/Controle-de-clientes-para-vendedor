@@ -95,14 +95,16 @@ function Dashboard() {
               stale
                 .sort((a, b) => (a.lastContact ?? "").localeCompare(b.lastContact ?? ""))
                 .map((c) => (
-                  <Link key={c.id} to="/clientes/$id" params={{ id: c.id }} className="flex items-center gap-3 px-4 py-3 hover:bg-muted">
-                    <Avatar name={c.name} className="size-9" />
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-semibold">{c.name}</div>
-                      <div className="truncate text-xs text-muted-foreground">
-                        {c.lastContact ? `${daysBetween(c.lastContact, t)} dias sem contato` : "Nunca contatado"} · {c.company}
+                  <div key={c.id} className="flex items-center gap-3 px-4 py-3 hover:bg-muted">
+                    <Link to="/clientes/$id" params={{ id: c.id }} className="flex min-w-0 flex-1 items-center gap-3">
+                      <Avatar name={c.name} className="size-9" />
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-sm font-semibold">{c.name}</div>
+                        <div className="truncate text-xs text-muted-foreground">
+                          {c.lastContact ? `${daysBetween(c.lastContact, t)} dias sem contato` : "Nunca contatado"} · {c.company}
+                        </div>
                       </div>
-                    </div>
+                    </Link>
                     <div className="flex shrink-0 items-center gap-1">
                       {c.phone && <IconBtn title={`Ligar para ${c.name}`} onClick={() => { window.location.href = `tel:${c.phone.replace(/\D/g, "")}`; }}><Phone className="size-4" /></IconBtn>}
                       {(c.whatsapp || c.phone) && <IconBtn title={`WhatsApp de ${c.name}`} onClick={() => {
@@ -111,7 +113,7 @@ function Dashboard() {
                       }}><MessageCircle className="size-4" /></IconBtn>}
                       <StatusBadge status={c.status} />
                     </div>
-                  </Link>
+                  </div>
                 ))
             )}
           </Card>
