@@ -14,6 +14,7 @@ import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as CarteiraRouteImport } from './routes/carteira'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as LembretesRouteImport } from './routes/lembretes'
+import { Route as ResumoRouteImport } from './routes/resumo'
 import { Route as ClientesIdRouteImport } from './routes/clientes.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +42,11 @@ const LembretesRoute = LembretesRouteImport.update({
   path: '/lembretes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResumoRoute = ResumoRouteImport.update({
+  id: '/resumo',
+  path: '/resumo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ClientesIdRoute = ClientesIdRouteImport.update({
   id: '/clientes/$id',
   path: '/clientes/$id',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/carteira': typeof CarteiraRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/lembretes': typeof LembretesRoute
+  '/resumo': typeof ResumoRoute
   '/clientes/$id': typeof ClientesIdRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/carteira': typeof CarteiraRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/lembretes': typeof LembretesRoute
+  '/resumo': typeof ResumoRoute
   '/clientes/$id': typeof ClientesIdRoute
 }
 export interface FileRoutesById {
@@ -70,6 +78,7 @@ export interface FileRoutesById {
   '/carteira': typeof CarteiraRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/lembretes': typeof LembretesRoute
+  '/resumo': typeof ResumoRoute
   '/clientes/$id': typeof ClientesIdRoute
 }
 export interface FileRouteTypes {
@@ -80,6 +89,7 @@ export interface FileRouteTypes {
     | '/carteira'
     | '/configuracoes'
     | '/lembretes'
+    | '/resumo'
     | '/clientes/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -88,6 +98,7 @@ export interface FileRouteTypes {
     | '/carteira'
     | '/configuracoes'
     | '/lembretes'
+    | '/resumo'
     | '/clientes/$id'
   id:
     | '__root__'
@@ -96,6 +107,7 @@ export interface FileRouteTypes {
     | '/carteira'
     | '/configuracoes'
     | '/lembretes'
+    | '/resumo'
     | '/clientes/$id'
   fileRoutesById: FileRoutesById
 }
@@ -105,6 +117,7 @@ export interface RootRouteChildren {
   CarteiraRoute: typeof CarteiraRoute
   ConfiguracoesRoute: typeof ConfiguracoesRoute
   LembretesRoute: typeof LembretesRoute
+  ResumoRoute: typeof ResumoRoute
   ClientesIdRoute: typeof ClientesIdRoute
 }
 
@@ -145,6 +158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LembretesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/resumo': {
+      id: '/resumo'
+      path: '/resumo'
+      fullPath: '/resumo'
+      preLoaderRoute: typeof ResumoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/clientes/$id': {
       id: '/clientes/$id'
       path: '/clientes/$id'
@@ -161,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   CarteiraRoute: CarteiraRoute,
   ConfiguracoesRoute: ConfiguracoesRoute,
   LembretesRoute: LembretesRoute,
+  ResumoRoute: ResumoRoute,
   ClientesIdRoute: ClientesIdRoute,
 }
 export const routeTree = rootRouteImport
