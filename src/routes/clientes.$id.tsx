@@ -17,6 +17,8 @@ export const Route = createFileRoute("/clientes/$id")({
       { name: "description", content: "Contatos, observações e histórico de atendimento do cliente." },
       { property: "og:title", content: "Perfil do cliente — Minha Carteira" },
       { property: "og:description", content: "Tudo sobre o cliente em um só lugar." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Perfil,

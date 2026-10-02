@@ -13,6 +13,8 @@ export const Route = createFileRoute("/configuracoes")({
       { name: "description", content: "Ajuste preferências e faça cópias de segurança dos seus dados." },
       { property: "og:title", content: "Configurações — Minha Carteira" },
       { property: "og:description", content: "Preferências do seu CRM pessoal." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Config,

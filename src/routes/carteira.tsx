@@ -13,6 +13,8 @@ export const Route = createFileRoute("/carteira")({
       { name: "description", content: "Busque, filtre e organize todos os seus clientes." },
       { property: "og:title", content: "Minha Carteira — Clientes" },
       { property: "og:description", content: "Sua carteira de clientes organizada e fácil de buscar." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Carteira,
