@@ -3,7 +3,7 @@ import { Users, UserCheck, Handshake, UserX, ClipboardPen, CalendarClock, AlertT
 import { Card, PageHeader } from "@/components/crm/bits";
 import { followVisual, staleCustomers, useCrm } from "@/lib/crm";
 
-export const Route = createFileRoute("/resumo")({
+export const Route = createFileRoute("/_authenticated/resumo")({
   head: () => ({
     meta: [
       { title: "Resumo da Carteira — Minha Carteira" },

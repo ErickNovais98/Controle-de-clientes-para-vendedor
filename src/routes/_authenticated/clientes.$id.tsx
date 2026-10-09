@@ -10,7 +10,7 @@ import {
 import { Avatar, Card, Empty, FollowUpRow, StatusBadge, TypeIcon } from "@/components/crm/bits";
 import { TYPE_LABEL, crm, fmtDate, fmtRelative, openDialog, sortFollow, useCrm } from "@/lib/crm";
 
-export const Route = createFileRoute("/clientes/$id")({
+export const Route = createFileRoute("/_authenticated/clientes/$id")({
   head: () => ({
     meta: [
       { title: "Perfil do cliente — Minha Carteira" },

@@ -6,7 +6,7 @@ import { Avatar, Card, Empty, PageHeader, StatusBadge, IconBtn } from "@/compone
 import { fmtDate, fmtRelative, nextContactOf, openDialog, useCrm, type CustomerStatus } from "@/lib/crm";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/carteira")({
+export const Route = createFileRoute("/_authenticated/carteira")({
   head: () => ({
     meta: [
       { title: "Minha Carteira — Clientes" },

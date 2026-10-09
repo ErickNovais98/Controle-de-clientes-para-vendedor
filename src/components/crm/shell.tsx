@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Home, Users, CalendarDays, Bell, Settings, Plus, ClipboardPen, Search, X } from "lucide-react";
+import { Home, Users, CalendarDays, Bell, Settings, Plus, ClipboardPen, Search, X, CircleUserRound } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { followVisual, openDialog, useCrm } from "@/lib/crm";
@@ -62,6 +62,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           ))}
         </nav>
         <div className="mt-auto flex flex-col gap-2">
+          <Button asChild variant="ghost"><Link to="/minha-conta"><CircleUserRound /> Minha conta</Link></Button>
           <Button disabled={!s.loaded} onClick={() => openDialog({ kind: "interaction" })}>
             <ClipboardPen /> Registrar atendimento
           </Button>
@@ -72,6 +73,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </aside>
 
       <main className="mx-auto min-w-0 max-w-6xl px-4 pb-28 pt-6 md:px-8 md:pb-10 md:pt-10">
+        <div className="mb-3 flex justify-end md:hidden"><Button asChild variant="ghost" size="sm"><Link to="/minha-conta"><CircleUserRound />Minha conta</Link></Button></div>
         <div className="relative mb-5 md:hidden">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <input className="field pl-9" aria-label="Buscar cliente" placeholder="Buscar cliente..." value={search} onChange={(e) => setSearch(e.target.value)} />
