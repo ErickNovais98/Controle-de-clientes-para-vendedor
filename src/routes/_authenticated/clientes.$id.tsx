@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Phone, MessageCircle, Mail, ClipboardPen, CalendarPlus, Pencil, Trash2, MapPin, Briefcase, Calendar } from "lucide-react";
+import { ArrowLeft, Phone, MessageCircle, Mail, ClipboardPen, CalendarPlus, Pencil, Trash2, MapPin, Briefcase, Calendar, UserRound, Hash } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -105,6 +105,8 @@ function Perfil() {
             <h2 className="mb-3 font-bold">Contato</h2>
             <dl className="space-y-2.5 text-sm">
               {[
+                [Hash, "Código do cliente", c.code],
+                [UserRound, "Nome do comprador", c.buyerName],
                 [Phone, "Telefone", c.phone],
                 [MessageCircle, "WhatsApp", c.whatsapp],
                 [Mail, "E-mail", c.email],

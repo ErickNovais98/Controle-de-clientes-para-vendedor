@@ -50,6 +50,8 @@ function CustomerForm({ customerId, onDone }: { customerId?: string | undefined;
   const existing = s.customers.find((c) => c.id === customerId);
   const [f, setF] = useState({
     name: existing?.name ?? "",
+    code: existing?.code ?? "",
+    buyerName: existing?.buyerName ?? "",
     company: existing?.company ?? "",
     phone: existing?.phone ?? "",
     whatsapp: existing?.whatsapp ?? "",
@@ -73,6 +75,8 @@ function CustomerForm({ customerId, onDone }: { customerId?: string | undefined;
       {
         id: existing?.id,
         name: f.name.trim(),
+        code: f.code.trim(),
+        buyerName: f.buyerName.trim(),
         company: f.company,
         phone: f.phone,
         whatsapp: f.whatsapp,
@@ -103,6 +107,12 @@ function CustomerForm({ customerId, onDone }: { customerId?: string | undefined;
         </Field>
         <Field label="Empresa">
           <input className="field" value={f.company} onChange={up("company")} />
+        </Field>
+        <Field label="Código do cliente">
+          <input className="field" value={f.code} onChange={up("code")} />
+        </Field>
+        <Field label="Nome do comprador">
+          <input className="field" value={f.buyerName} onChange={up("buyerName")} />
         </Field>
         <Field label="Telefone">
           <input className="field" value={f.phone} onChange={up("phone")} placeholder="(11) 99999-9999" />
