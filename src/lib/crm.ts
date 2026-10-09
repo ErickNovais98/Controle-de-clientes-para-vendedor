@@ -1,4 +1,5 @@
 import { useEffect, useSyncExternalStore } from "react";
+import { planCustomerImport, type ImportCustomer } from './customer-import';
 
 export type CustomerStatus = "ativo" | "negociacao" | "inativo";
 export type InteractionType = "ligacao" | "whatsapp" | "visita" | "email" | "reuniao" | "outro";
@@ -8,6 +9,8 @@ export type FollowVisual = "atrasado" | "hoje" | "proximo" | "concluido" | "canc
 export interface Customer {
   id: string;
   name: string;
+  code?: string | undefined;
+  buyerName?: string | undefined;
   company: string;
   phone: string;
   whatsapp: string;
@@ -336,6 +339,15 @@ export const crm = {
     const data = JSON.parse(json);
     if (!Array.isArray(data.customers)) throw new Error("invalid");
     set(() => ({ ...EMPTY, ...data, settings: { ...EMPTY.settings, ...data.settings, notifications: { ...EMPTY.settings.notifications, ...data.settings?.notifications } }, loaded: true }));
+  },
+  importCustomers(incoming: ImportCustomer[]) {
+    load();
+    const plan = planCustomerImport(incoming, state.customers);
+    if (plan.additions.length) set(s => ({ ...s, customers: [
+      ...s.customers,
+      ...plan.additions.map(customer => ({ ...customer, id: uid(), createdAt: stamp(), updatedAt: stamp() })),
+    ] }));
+    return { added: plan.additions.length, duplicates: plan.duplicates };
   },
   resetDemo() {
     set(() => ({ ...seed(), loaded: true }));

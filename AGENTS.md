@@ -13,3 +13,4 @@
 - Use TanStack file routes for each CRM view and keep shared navigation and dialogs in the root shell, so deep links and actions remain consistent.
 - Keep the CRM shell in the authenticated layout, with public auth/recovery routes outside it and one root auth-state subscriber, so signed-out visitors never mount CRM content.
 - Authentication does not migrate or erase the legacy shared browser CRM store; data synchronization and per-user ownership require a separate migration.
+- Parse spreadsheets in a browser-safe import module and commit additions through the shared CRM store; use customer codes as duplicate keys when present so same-name accounts remain distinct.
