@@ -126,9 +126,13 @@ function RootComponent() {
         return;
       }
       if (event !== 'SIGNED_IN' && event !== 'SIGNED_OUT' && event !== 'USER_UPDATED') return;
-      void router.invalidate();
-      if (event !== 'SIGNED_OUT') void queryClient.invalidateQueries();
-      if (event === 'SIGNED_IN' && router.state.location.pathname === '/auth') void router.navigate({ to: '/', replace: true });
+      // Auth callbacks run while the SDK session lock is held; defer route
+      // validation because the protected layout revalidates through getUser().
+      setTimeout(() => {
+        void router.invalidate();
+        if (event !== 'SIGNED_OUT') void queryClient.invalidateQueries();
+        if (event === 'SIGNED_IN' && router.state.location.pathname === '/auth') void router.navigate({ to: '/', replace: true });
+      }, 0);
     });
     return () => data.subscription.unsubscribe();
   }, [router, queryClient]);

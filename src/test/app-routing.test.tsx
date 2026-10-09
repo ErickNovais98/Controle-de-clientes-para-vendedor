@@ -2,8 +2,16 @@ import { QueryClient } from "@tanstack/react-query";
 import { createMemoryHistory, createRouter, RouterProvider } from "@tanstack/react-router";
 import { cleanup, render, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import type { ReactNode } from 'react';
+
+vi.mock('@/integrations/supabase/client', () => ({ supabase: { auth: {
+  getUser: vi.fn(async () => ({ data: { user: null }, error: null })),
+  onAuthStateChange: vi.fn(() => ({ data: { subscription: { unsubscribe: vi.fn() } } })),
+} } }));
 
 import { routeTree } from "@/routeTree.gen";
+import { Route as RootRoute } from '@/routes/__root';
+RootRoute.options.shellComponent = ({ children }: { children: ReactNode }) => <>{children}</>;
 
 function renderAt(path: string) {
   const queryClient = new QueryClient();
@@ -12,7 +20,7 @@ function renderAt(path: string) {
     context: { queryClient },
     history: createMemoryHistory({ initialEntries: [path] }),
   });
-  return render(<RouterProvider router={router} />);
+  return { ...render(<RouterProvider router={router} />), router };
 }
 
 afterEach(() => {
@@ -35,5 +43,9 @@ describe("App routing", () => {
     const { container } = renderAt("/this-route-does-not-exist");
 
     await waitFor(() => expect(container.firstChild).not.toBeNull());
+  });
+  it('requires login to access CRM customers', async () => {
+    const { router } = renderAt('/carteira');
+    await waitFor(() => expect(router.state.location.pathname).toBe('/auth'));
   });
 });
