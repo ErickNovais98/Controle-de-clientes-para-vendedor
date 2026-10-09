@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, Card, Empty, PageHeader, StatusBadge, IconBtn } from "@/components/crm/bits";
 import { fmtDate, fmtRelative, nextContactOf, openDialog, useCrm, type CustomerStatus } from "@/lib/crm";
 import { cn } from "@/lib/utils";
+import { CustomerImport } from '@/components/crm/customer-import';
 
 export const Route = createFileRoute("/_authenticated/carteira")({
   head: () => ({
@@ -40,7 +41,7 @@ function Carteira() {
       .filter((c) => filter === "todos" || c.status === filter)
       .filter((c) =>
         !term ||
-        [c.name, c.company, c.phone, c.whatsapp, c.city, c.segment, c.email, ...c.tags].some((v) => v?.toLowerCase().includes(term)),
+        [c.name, c.code, c.buyerName, c.company, c.phone, c.whatsapp, c.city, c.segment, c.email, ...c.tags].some((v) => v?.toLowerCase().includes(term)),
       )
       .map((c) => ({ c, next: nextContactOf(s, c.id) }));
     const order: Record<CustomerStatus, number> = { negociacao: 0, ativo: 1, inativo: 2 };
@@ -58,7 +59,7 @@ function Carteira() {
       <PageHeader
         title="Minha Carteira"
         subtitle={`${s.customers.length} clientes`}
-        actions={<Button onClick={() => openDialog({ kind: "customer" })}><Plus /> Novo Cliente</Button>}
+        actions={<div className="flex flex-wrap gap-2"><CustomerImport /><Button onClick={() => openDialog({ kind: "customer" })}><Plus /> Novo Cliente</Button></div>}
       />
       <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center">
         <div className="relative flex-1">
@@ -110,6 +111,7 @@ function Carteira() {
                         <div>
                           <div className="font-semibold hover:text-primary">{c.name}</div>
                           <div className="text-xs text-muted-foreground">{c.company}</div>
+                          <div className="text-xs text-muted-foreground">{[c.code && `Código ${c.code}`, c.buyerName].filter(Boolean).join(' · ')}</div>
                         </div>
                       </Link>
                     </td>
@@ -154,6 +156,7 @@ function Carteira() {
                       <StatusBadge status={c.status} />
                     </div>
                     <div className="truncate text-xs text-muted-foreground">{c.company}</div>
+                    <div className="truncate text-xs text-muted-foreground">{[c.code && `Código ${c.code}`, c.buyerName].filter(Boolean).join(' · ')}</div>
                     <div className="mt-1 flex flex-wrap gap-x-3 text-xs text-muted-foreground">
                       {c.phone && <span className="inline-flex items-center gap-1"><Phone className="size-3" />{c.phone}</span>}
                       {c.city && <span className="inline-flex items-center gap-1"><MapPin className="size-3" />{c.city}</span>}
