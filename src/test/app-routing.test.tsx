@@ -11,7 +11,7 @@ vi.mock('@/integrations/supabase/client', () => ({ supabase: { auth: {
 
 import { routeTree } from "@/routeTree.gen";
 import { Route as RootRoute } from '@/routes/__root';
-RootRoute.options.shellComponent = ({ children }: { children: ReactNode }) => <>{children}</>;
+Object.assign(RootRoute.options, { shellComponent: ({ children }: { children: ReactNode }) => <>{children}</> });
 
 function renderAt(path: string) {
   const queryClient = new QueryClient();
