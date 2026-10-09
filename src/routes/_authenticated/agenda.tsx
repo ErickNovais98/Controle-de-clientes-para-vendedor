@@ -6,7 +6,7 @@ import { Card, Empty, FollowUpRow, PageHeader, followDot } from "@/components/cr
 import { addDays, followVisual, parseISO, sortFollow, toISO, todayISO, useCrm, openDialog } from "@/lib/crm";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/agenda")({
+export const Route = createFileRoute("/_authenticated/agenda")({
   head: () => ({
     meta: [
       { title: "Agenda — Minha Carteira" },

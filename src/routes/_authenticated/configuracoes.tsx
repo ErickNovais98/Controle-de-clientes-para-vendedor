@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, Empty, PageHeader } from "@/components/crm/bits";
 import { crm, todayISO, useCrm } from "@/lib/crm";
 
-export const Route = createFileRoute("/configuracoes")({
+export const Route = createFileRoute("/_authenticated/configuracoes")({
   head: () => ({
     meta: [
       { title: "Configurações — Minha Carteira" },

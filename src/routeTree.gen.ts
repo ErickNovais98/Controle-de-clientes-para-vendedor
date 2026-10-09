@@ -10,11 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AgendaRouteImport } from './routes/agenda'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CarteiraRouteImport } from './routes/carteira'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as LembretesRouteImport } from './routes/lembretes'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ResumoRouteImport } from './routes/resumo'
+import { Route as AuthenticatedMinhaContaRouteImport } from './routes/_authenticated/minha-conta'
 import { Route as ClientesIdRouteImport } from './routes/clientes.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -22,9 +26,18 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AgendaRoute = AgendaRouteImport.update({
   id: '/agenda',
   path: '/agenda',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CarteiraRoute = CarteiraRouteImport.update({
@@ -42,10 +55,20 @@ const LembretesRoute = LembretesRouteImport.update({
   path: '/lembretes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResumoRoute = ResumoRouteImport.update({
   id: '/resumo',
   path: '/resumo',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedMinhaContaRoute = AuthenticatedMinhaContaRouteImport.update({
+  id: '/minha-conta',
+  path: '/minha-conta',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const ClientesIdRoute = ClientesIdRouteImport.update({
   id: '/clientes/$id',
@@ -56,29 +79,39 @@ const ClientesIdRoute = ClientesIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/agenda': typeof AgendaRoute
+  '/auth': typeof AuthRoute
   '/carteira': typeof CarteiraRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/lembretes': typeof LembretesRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/resumo': typeof ResumoRoute
+  '/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/clientes/$id': typeof ClientesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/agenda': typeof AgendaRoute
+  '/auth': typeof AuthRoute
   '/carteira': typeof CarteiraRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/lembretes': typeof LembretesRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/resumo': typeof ResumoRoute
+  '/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/clientes/$id': typeof ClientesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/agenda': typeof AgendaRoute
+  '/auth': typeof AuthRoute
   '/carteira': typeof CarteiraRoute
   '/configuracoes': typeof ConfiguracoesRoute
   '/lembretes': typeof LembretesRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/resumo': typeof ResumoRoute
+  '/_authenticated/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/clientes/$id': typeof ClientesIdRoute
 }
 export interface FileRouteTypes {
@@ -86,37 +119,50 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/agenda'
+    | '/auth'
     | '/carteira'
     | '/configuracoes'
     | '/lembretes'
+    | '/reset-password'
     | '/resumo'
+    | '/minha-conta'
     | '/clientes/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/agenda'
+    | '/auth'
     | '/carteira'
     | '/configuracoes'
     | '/lembretes'
+    | '/reset-password'
     | '/resumo'
+    | '/minha-conta'
     | '/clientes/$id'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/agenda'
+    | '/auth'
     | '/carteira'
     | '/configuracoes'
     | '/lembretes'
+    | '/reset-password'
     | '/resumo'
+    | '/_authenticated/minha-conta'
     | '/clientes/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AgendaRoute: typeof AgendaRoute
+  AuthRoute: typeof AuthRoute
   CarteiraRoute: typeof CarteiraRoute
   ConfiguracoesRoute: typeof ConfiguracoesRoute
   LembretesRoute: typeof LembretesRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ResumoRoute: typeof ResumoRoute
   ClientesIdRoute: typeof ClientesIdRoute
 }
@@ -130,11 +176,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/agenda': {
       id: '/agenda'
       path: '/agenda'
       fullPath: '/agenda'
       preLoaderRoute: typeof AgendaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/carteira': {
@@ -158,12 +218,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LembretesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/resumo': {
       id: '/resumo'
       path: '/resumo'
       fullPath: '/resumo'
       preLoaderRoute: typeof ResumoRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/minha-conta': {
+      id: '/_authenticated/minha-conta'
+      path: '/minha-conta'
+      fullPath: '/minha-conta'
+      preLoaderRoute: typeof AuthenticatedMinhaContaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/clientes/$id': {
       id: '/clientes/$id'
@@ -175,12 +249,26 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedMinhaContaRoute: typeof AuthenticatedMinhaContaRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedMinhaContaRoute: AuthenticatedMinhaContaRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AgendaRoute: AgendaRoute,
+  AuthRoute: AuthRoute,
   CarteiraRoute: CarteiraRoute,
   ConfiguracoesRoute: ConfiguracoesRoute,
   LembretesRoute: LembretesRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ResumoRoute: ResumoRoute,
   ClientesIdRoute: ClientesIdRoute,
 }

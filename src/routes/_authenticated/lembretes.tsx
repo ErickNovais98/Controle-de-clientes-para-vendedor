@@ -4,7 +4,7 @@ import { Card, Empty, FollowUpRow, PageHeader } from "@/components/crm/bits";
 import { followVisual, sortFollow, useCrm, type FollowVisual } from "@/lib/crm";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/lembretes")({
+export const Route = createFileRoute("/_authenticated/lembretes")({
   head: () => ({
     meta: [
       { title: "Lembretes — Minha Carteira" },
